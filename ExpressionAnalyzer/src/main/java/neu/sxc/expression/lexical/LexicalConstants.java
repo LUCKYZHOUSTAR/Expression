@@ -187,6 +187,7 @@ public class LexicalConstants {
         doubleDelimiters.add("&&");
         doubleDelimiters.add("||");
         doubleDelimiters.add(">>");
+        doubleDelimiters.add("<<");
         DOUBLE_DELIMITERS = Collections.unmodifiableList(doubleDelimiters);
 
         //TODO:单一字符串数组
@@ -224,6 +225,7 @@ public class LexicalConstants {
         operators.add("!=");
         //TODO:添加信息
         operators.add(">>");
+        operators.add("<<");
         operators.add("&&");
         operators.add("||");
         operators.add("!");

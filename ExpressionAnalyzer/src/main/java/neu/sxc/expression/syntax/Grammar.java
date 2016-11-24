@@ -74,6 +74,8 @@ public class Grammar {
         //TODO:添加扩展内容----=》
         _compare.addProduction(new TerminalToken[] { startMark }, new Token[] { startMark,
                 expression, startExe });
+        _compare.addProduction(new TerminalToken[] { endMark }, new Token[] { endMark, expression,
+                endExe });
         _compare.addProduction(new TerminalToken[] { greatMark }, new Token[] { greatMark,
                 expression, greatExe });
         _compare.addProduction(new TerminalToken[] { greatEMark }, new Token[] { greatEMark,
@@ -92,9 +94,9 @@ public class Grammar {
                 addExe, _expression });
         _expression.addProduction(new TerminalToken[] { minusMark }, new Token[] { minusMark, term,
                 minusExe, _expression });
-        _expression.addProduction(new TerminalToken[] { equalMark, notEMark, startMark, greatMark,
-                greatEMark, lessMark, lessEMark, andMark, orMark, rightBracket, comma, semicolon },
-            new Token[] {});
+        _expression.addProduction(new TerminalToken[] { equalMark, notEMark, startMark, endMark,
+                greatMark, greatEMark, lessMark, lessEMark, andMark, orMark, rightBracket, comma,
+                semicolon }, new Token[] {});
 
         term.addProduction(new TerminalToken[] { variable, constant, minusMark, leftBracket,
                 function }, new Token[] { factor, _term });
@@ -106,7 +108,7 @@ public class Grammar {
         _term.addProduction(new TerminalToken[] { modMark }, new Token[] { modMark, factor, modExe,
                 _term });
         _term.addProduction(new TerminalToken[] { addMark, minusMark, equalMark, notEMark,
-                startMark, greatMark, greatEMark, lessMark, lessEMark, andMark, orMark,
+                startMark, endMark, greatMark, greatEMark, lessMark, lessEMark, andMark, orMark,
                 rightBracket, comma, semicolon }, new Token[] {});
 
         factor.addProduction(new TerminalToken[] { variable }, new Token[] { variable });
@@ -179,9 +181,12 @@ public class Grammar {
                                                       .buildDelimiter();
     private DelimiterToken   equalMark            = TokenBuilder.getBuilder().text("==")
                                                       .buildDelimiter();
+    private DelimiterToken   endMark              = TokenBuilder.getBuilder().text("<<")
+                                                      .buildDelimiter();
     //TODO:添加起始字符串----=>
     private DelimiterToken   startMark            = TokenBuilder.getBuilder().text(">>")
                                                       .buildDelimiter();
+
     private DelimiterToken   notEMark             = TokenBuilder.getBuilder().text("!=")
                                                       .buildDelimiter();
 
@@ -283,6 +288,11 @@ public class Grammar {
                                                       .getBuilder()
                                                       .executable(
                                                           OperatorFactory.getOperator("START"))
+                                                      .buildExecution();
+    private ExecutionToken   endExe               = TokenBuilder
+                                                      .getBuilder()
+                                                      .executable(
+                                                          OperatorFactory.getOperator("END"))
                                                       .buildExecution();
     private ExecutionToken   greatExe             = TokenBuilder
                                                       .getBuilder()

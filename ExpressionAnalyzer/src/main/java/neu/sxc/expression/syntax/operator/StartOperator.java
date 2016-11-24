@@ -9,7 +9,7 @@ import neu.sxc.expression.tokens.Valuable;
 
 /** 
 * @ClassName: StartOperator 
-* @Description: 
+* @Description: 以。。。为开始
 * @author chaoqiang.zhou
 * @date 2016年11月4日 下午5:17:02 
 *  
