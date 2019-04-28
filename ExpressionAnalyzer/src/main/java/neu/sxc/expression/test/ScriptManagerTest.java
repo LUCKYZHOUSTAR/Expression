@@ -5,6 +5,8 @@ import neu.sxc.expression.Expression;
 import neu.sxc.expression.ExpressionFactory;
 import neu.sxc.expression.tokens.Valuable;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Scanner;
 
 /**
@@ -161,13 +163,25 @@ public class ScriptManagerTest {
         System.out.println(result.getBooleanValue());
     }
 
+
+    public static void test3333() {
+        String json = "start > [2012-03-01] && start<[2019-06-01];";
+
+        ExpressionFactory factory = ExpressionFactory.getInstance();
+        //        String condition = "user1=zhangsasn;user2=lisi;user3=wangwu;user4=liliu;";
+        Expression exp = factory.getExpression(json);
+        exp.setVariableValue("start", dataToCalendar(new Date()));
+        Valuable result = exp.evaluate();
+        System.out.println(result.getBooleanValue());
+    }
+
     public static void main(String[] args) throws Exception {
         String json = "(user1>>\"张三\");";
 
         Scanner scanner = new Scanner(json);
         System.out.println(scanner.nextLine());
 
-        test13();
+        test3333();
     }
 
     //以。。。开始
@@ -214,4 +228,9 @@ public class ScriptManagerTest {
 
     }
 
+    public static Calendar dataToCalendar(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        return calendar;
+    }
 }
