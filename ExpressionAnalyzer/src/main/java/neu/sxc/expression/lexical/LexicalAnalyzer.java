@@ -1,19 +1,5 @@
 package neu.sxc.expression.lexical;
 
-import static neu.sxc.expression.lexical.LexicalConstants.*;
-
-import java.math.BigDecimal;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import neu.sxc.expression.lexical.dfa.DFADefinition;
 import neu.sxc.expression.lexical.dfa.DFAEndStateCode;
 import neu.sxc.expression.lexical.dfa.DFAMidState;
@@ -26,20 +12,30 @@ import neu.sxc.expression.tokens.VariableToken;
 import neu.sxc.expression.utils.DataCache;
 import neu.sxc.expression.utils.ExpressionUtil;
 
+import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static neu.sxc.expression.lexical.LexicalConstants.*;
+
 public class LexicalAnalyzer {
-    private DFADefinition         DFA            = DFADefinition.getDFA();
+    private DFADefinition DFA = DFADefinition.getDFA();
 
-    private TerminalToken         curToken;
+    private TerminalToken curToken;
 
-    private StringBuilder         curWord;
+    private StringBuilder curWord;
 
-    private int                   curLine        = 0;
+    private int curLine = 0;
 
-    private int                   nextScanColumn = 0;
+    private int nextScanColumn = 0;
 
-    private List<TerminalToken>   tokens;
+    private List<TerminalToken> tokens;
 
-    private Scanner               scanner;
+    private Scanner scanner;
 
     private Map<String, Function> functionTable;
 
@@ -55,7 +51,7 @@ public class LexicalAnalyzer {
     }
 
     public List<TerminalToken> analysis(String expression, Map<String, Function> functionTable)
-                                                                                               throws LexicalException {
+            throws LexicalException {
         if (expression == null || expression.length() == 0)
             throw new LexicalException("Invalid empty expression.");
         this.scanner = new Scanner(expression);
@@ -79,8 +75,9 @@ public class LexicalAnalyzer {
 
     /**
      * Analysis the expression
+     *
      * @return
-     * @throws LexicalException 
+     * @throws LexicalException
      */
     private void doAnalysis() throws LexicalException {
         char[] curLineCharArray; //the character array used to store the current line
@@ -117,17 +114,18 @@ public class LexicalAnalyzer {
     }
 
     /**
-     * Go to the next middle state, if the next middle state is null, 
+     * Go to the next middle state, if the next middle state is null,
      * it may come to an end state, and then we will act at this end state.
      * if we can not find a next middle state or a next end state,
      * there must be a lexical error in the current word
+     *
      * @param curState
      * @param curLineCharArray
      * @return
-     * @throws LexicalException 
+     * @throws LexicalException
      */
     private DFAMidState goToNextMidState(DFAMidState curMidState, char[] curLineCharArray)
-                                                                                          throws LexicalException {
+            throws LexicalException {
         char inputChar = curLineCharArray[nextScanColumn]; //store the coming char
         DFAMidState nextMidsState = null; //the next mid state
         DFAEndStateCode nextEndStateCode = null; //the next end state code
@@ -149,6 +147,7 @@ public class LexicalAnalyzer {
 
     /**
      * Come to a new middle state, append the input character to the current word
+     *
      * @param inputChar
      */
     private void actAtMiddleState(char inputChar) {
@@ -160,8 +159,9 @@ public class LexicalAnalyzer {
      * When the current line is end, we will check if it has a next end state,
      * if it has, we will act at this end state, and one word is recognized,
      * otherwise there is a lexical error
+     *
      * @param midState
-     * @throws LexicalException 
+     * @throws LexicalException
      */
     private void analysisAtLineEnd(DFAMidState midState) throws LexicalException {
         DFAEndStateCode nextEndStateCode = midState.getNextEndStateCode();
@@ -174,8 +174,9 @@ public class LexicalAnalyzer {
 
     /**
      * Act at an end state, recognize the word, if a lexical error occurring, catch it
+     *
      * @param endStateCode
-     * @throws LexicalException 
+     * @throws LexicalException
      */
     //TODO:解析TOKENS的过程
     private void actAtEndState(DFAEndStateCode endStateCode) throws LexicalException {
@@ -184,42 +185,42 @@ public class LexicalAnalyzer {
         switch (endStateCode) {
             case NUMBER_END:
                 curToken = TokenBuilder.getBuilder().line(curLine).column(wordStartColumn)
-                    .text(curWordText).dataType(DataType.NUMBER)
-                    .index(DataCache.getBigDecimalIndex(new BigDecimal(curWordText))).buildConst();
+                        .text(curWordText).dataType(DataType.NUMBER)
+                        .index(DataCache.getBigDecimalIndex(new BigDecimal(curWordText))).buildConst();
                 break;
             case ID_END:
                 if ("true".equals(curWordText) || "TRUE".equals(curWordText)
-                    || "false".equals(curWordText) || "FALSE".equals(curWordText)) {
+                        || "false".equals(curWordText) || "FALSE".equals(curWordText)) {
                     curToken = TokenBuilder.getBuilder().line(curLine).column(wordStartColumn)
-                        .text(curWordText).dataType(DataType.BOOLEAN)
-                        .index(DataCache.getBooleanIndex(Boolean.valueOf(curWordText)))
-                        .buildConst();
+                            .text(curWordText).dataType(DataType.BOOLEAN)
+                            .index(DataCache.getBooleanIndex(Boolean.valueOf(curWordText)))
+                            .buildConst();
                 } else if (KEY_WORDS.contains(curWordText)) {
                     curToken = TokenBuilder.getBuilder().line(curLine).column(wordStartColumn)
-                        .text(curWordText).buildKey();
+                            .text(curWordText).buildKey();
                 } else if (hasFunction(curWordText)) {
                     curToken = TokenBuilder.getBuilder().line(curLine).column(wordStartColumn)
-                        .text(curWordText).function(findFunction(curWordText)).buildFunction();
+                            .text(curWordText).function(findFunction(curWordText)).buildFunction();
                 } else
                     curToken = TokenBuilder.getBuilder().line(curLine).column(wordStartColumn)
-                        .text(curWordText).buildVariable();
+                            .text(curWordText).buildVariable();
                 break;
             case SINGLE_DELIMITER_END:
                 if (SINGLE_DELIMITERS.contains(curWordText))
                     curToken = TokenBuilder.getBuilder().line(curLine).column(wordStartColumn)
-                        .text(curWordText).buildDelimiter();
+                            .text(curWordText).buildDelimiter();
                 else
                     throw new LexicalException("Invalid delimiter.", curLine, wordStartColumn);
                 break;
             case DOUBLE_DELIMITER_END:
                 if (DOUBLE_DELIMITERS.contains(curWordText)) {
                     curToken = TokenBuilder.getBuilder().line(curLine).column(wordStartColumn)
-                        .text(curWordText).buildDelimiter();
+                            .text(curWordText).buildDelimiter();
                 } else {
                     String firstDelimiter = curWordText.substring(0, 1);
                     if (SINGLE_DELIMITERS.contains(firstDelimiter)) {
                         curToken = TokenBuilder.getBuilder().line(curLine).column(wordStartColumn)
-                            .text(firstDelimiter).buildDelimiter();
+                                .text(firstDelimiter).buildDelimiter();
                         nextScanColumn--;
                     } else
                         throw new LexicalException("Invalid delimiter.", curLine, wordStartColumn);
@@ -239,17 +240,17 @@ public class LexicalAnalyzer {
                         date.setTime(dateFormate.parse(curWordText));
                     } else {
                         throw new LexicalException(
-                            "Wrong date format, please input as [yyyy-MM-dd] or [yyyy-MM-dd HH:mm:ss].",
-                            curLine, wordStartColumn);
+                                "Wrong date format, please input as [yyyy-MM-dd] or [yyyy-MM-dd HH:mm:ss].",
+                                curLine, wordStartColumn);
                     }
                     if (date != null)
                         curToken = TokenBuilder.getBuilder().line(curLine).column(wordStartColumn)
-                            .text(curWordText).dataType(DataType.DATE)
-                            .index(DataCache.getDateIndex(date)).buildConst();
+                                .text(curWordText).dataType(DataType.DATE)
+                                .index(DataCache.getDateIndex(date)).buildConst();
                 } catch (ParseException e) {
                     throw new LexicalException(
-                        "Wrong date format, please input as [yyyy-MM-dd] or [yyyy-MM-dd HH:mm:ss].",
-                        curLine, wordStartColumn);
+                            "Wrong date format, please input as [yyyy-MM-dd] or [yyyy-MM-dd HH:mm:ss].",
+                            curLine, wordStartColumn);
                 }
                 break;
             case CHAR_END:
@@ -259,15 +260,15 @@ public class LexicalAnalyzer {
                 else
                     ch = ExpressionUtil.getEscapedChar(curWordText.toCharArray()[2]);
                 curToken = TokenBuilder.getBuilder().line(curLine).column(wordStartColumn)
-                    .text(curWordText).dataType(DataType.CHARACTER)
-                    .index(DataCache.getCharIndex(ch)).buildConst();
+                        .text(curWordText).dataType(DataType.CHARACTER)
+                        .index(DataCache.getCharIndex(ch)).buildConst();
                 break;
             case STRING_END:
                 String str = curWordText.substring(1, curWordText.length() - 1);
                 str = ExpressionUtil.transformEscapesInString(str);
                 curToken = TokenBuilder.getBuilder().line(curLine).column(wordStartColumn)
-                    .text(curWordText).dataType(DataType.STRING)
-                    .index(DataCache.getStringIndex(str)).buildConst();
+                        .text(curWordText).dataType(DataType.STRING)
+                        .index(DataCache.getStringIndex(str)).buildConst();
                 break;
         }
         if (curToken != null) {
@@ -295,7 +296,7 @@ public class LexicalAnalyzer {
 
     private int escapeBlank(char[] curLineCharArray) {
         while (nextScanColumn < curLineCharArray.length
-               && ((Character) curLineCharArray[nextScanColumn]).toString().matches(BLANK_PATTERN))
+                && ((Character) curLineCharArray[nextScanColumn]).toString().matches(BLANK_PATTERN))
             nextScanColumn++;
 
         return nextScanColumn;

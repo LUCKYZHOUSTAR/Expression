@@ -2,6 +2,8 @@ package neu.sxc.expression.lexical.dfa;
 
 import static neu.sxc.expression.lexical.LexicalConstants.*;
 
+
+//TODO:表达式符号
 public class DFADefinition {
 	private static DFADefinition dfa = new DFADefinition();
 	
