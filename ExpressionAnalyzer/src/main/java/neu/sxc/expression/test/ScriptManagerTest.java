@@ -176,17 +176,18 @@ public class ScriptManagerTest {
     }
 
 
-
     public static void test333344() {
-        String json = "start > [2012-03-01 15:33:43] && start<[2019-06-01 21:23:23];";
+        String json = "(start > [2012-03-01 15:33:43] && start<[2019-06-01 21:23:23])&&(city==\"123\"||city==\"234\");";
 
         ExpressionFactory factory = ExpressionFactory.getInstance();
         //        String condition = "user1=zhangsasn;user2=lisi;user3=wangwu;user4=liliu;";
         Expression exp = factory.getExpression(json);
         exp.setVariableValue("start", dataToCalendar(new Date()));
+        exp.setVariableValue("city", "345");
         Valuable result = exp.evaluate();
         System.out.println(result.getBooleanValue());
     }
+
     public static void main(String[] args) throws Exception {
         String json = "(user1>>\"张三\");";
 
