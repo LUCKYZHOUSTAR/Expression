@@ -189,19 +189,39 @@ public class ScriptManagerTest {
 
     public static void test3333446666() {
 
+
+        //start > [2012-03-01 15:33:43]&&(city=="123"||city=="234"|| city=="all") ||  start > [2012-03-02 15:33:43]&&(city=="123"||city=="234"|| city=="all")
+
         //开始时间配置>=,结束时间配置<=
-        String json = "(start > [2012-03-01 15:33:43]&&(city==\"123\"||city==\"234\"))&& (end<[2019-06-01 21:23:23]&&(city==\"567\"||city==\"453\"));";
+        String json = "(start > [2012-03-01 15:33:43]&&(city==\"123\"||city==\"234\"|| city==\"all\"))||(start > [2012-03-01 15:33:43]&&(city==\"123\"||city==\"234\"|| city==\"all\"))||(start > [2012-03-01 15:33:43]&&(city==\"123\"||city==\"234\"|| city==\"all\"));";
 
         ExpressionFactory factory = ExpressionFactory.getInstance();
         //        String condition = "user1=zhangsasn;user2=lisi;user3=wangwu;user4=liliu;";
         Expression exp = factory.getExpression(json);
         exp.setVariableValue("start", dataToCalendar(new Date()));
-        exp.setVariableValue("city", "234");
+        exp.setVariableValue("city", "all");
+
+        Valuable result = exp.evaluate();
+        System.out.println(result.getBooleanValue());
+    }
+
+
+    public static void test33334466663333() {
+
+        //开始时间配置>=,结束时间配置<=
+        String json = "(start > [2012-03-01 15:33:43]&&(city==\"123\"||city==\"234\"|| city==\"all\"))&& (end<[2019-06-01 21:23:23]&&(city==\"567\"||city==\"453\"||city==\"all\"));";
+
+        ExpressionFactory factory = ExpressionFactory.getInstance();
+        //        String condition = "user1=zhangsasn;user2=lisi;user3=wangwu;user4=liliu;";
+        Expression exp = factory.getExpression(json);
+//        exp.setVariableValue("start", dataToCalendar(new Date()));
+        exp.setVariableValue("city", "all");
         exp.setVariableValue("end", dataToCalendar(new Date()));
 
         Valuable result = exp.evaluate();
         System.out.println(result.getBooleanValue());
     }
+
 
     public static void main(String[] args) throws Exception {
 //        String json = "(user1>>\"张三\");";
@@ -209,7 +229,19 @@ public class ScriptManagerTest {
 //        Scanner scanner = new Scanner(json);
 //        System.out.println(scanner.nextLine());
 
-        test3333446666();
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("(city==\"123\"||city==\"234\"|| city==\"all\")");
+
+        for (int i = 0; i < 1000; i++) {
+            sb.append("(city==\"123\"||city==\"234\"|| city==\"all\")");
+
+        }
+
+        long start = System.currentTimeMillis();
+
+        long end = System.currentTimeMillis();
+        System.out.println((end - start) / 1000);
     }
 
     //以。。。开始
