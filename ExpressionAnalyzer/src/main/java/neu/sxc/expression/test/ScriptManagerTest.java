@@ -7,7 +7,6 @@ import neu.sxc.expression.tokens.Valuable;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Scanner;
 
 /**
  * @author chaoqiang.zhou
@@ -188,13 +187,29 @@ public class ScriptManagerTest {
         System.out.println(result.getBooleanValue());
     }
 
+    public static void test3333446666() {
+
+        //开始时间配置>=,结束时间配置<=
+        String json = "(start > [2012-03-01 15:33:43]&&(city==\"123\"||city==\"234\"))&& (end<[2019-06-01 21:23:23]&&(city==\"567\"||city==\"453\"));";
+
+        ExpressionFactory factory = ExpressionFactory.getInstance();
+        //        String condition = "user1=zhangsasn;user2=lisi;user3=wangwu;user4=liliu;";
+        Expression exp = factory.getExpression(json);
+        exp.setVariableValue("start", dataToCalendar(new Date()));
+        exp.setVariableValue("city", "234");
+        exp.setVariableValue("end", dataToCalendar(new Date()));
+
+        Valuable result = exp.evaluate();
+        System.out.println(result.getBooleanValue());
+    }
+
     public static void main(String[] args) throws Exception {
-        String json = "(user1>>\"张三\");";
+//        String json = "(user1>>\"张三\");";
+//
+//        Scanner scanner = new Scanner(json);
+//        System.out.println(scanner.nextLine());
 
-        Scanner scanner = new Scanner(json);
-        System.out.println(scanner.nextLine());
-
-        test333344();
+        test3333446666();
     }
 
     //以。。。开始
