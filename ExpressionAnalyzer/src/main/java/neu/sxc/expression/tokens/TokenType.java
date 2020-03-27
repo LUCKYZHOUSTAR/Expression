@@ -1,5 +1,6 @@
 package neu.sxc.expression.tokens;
 
+//Token类别
 public enum TokenType {
 	NT,
 	EXECUTION,

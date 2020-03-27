@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+//表示非终结符。
 public final class NonterminalToken implements Token {
 	
     //TODO:初始化符号信息

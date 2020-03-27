@@ -6,6 +6,7 @@ import java.util.Calendar;
 import neu.sxc.expression.utils.ValueUtil;
 
 
+//代表表达式运算过程中的中间结果
 public final class RuntimeValue implements Valuable {
 
 	private DataType dataType;
