@@ -1,5 +1,6 @@
 package neu.sxc.expression.tokens;
 
+//常量
 public final class ConstToken extends ValueToken {
 
 	public ConstToken(TokenBuilder builder) {

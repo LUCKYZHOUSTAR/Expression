@@ -270,10 +270,10 @@ public class ScriptManagerTest {
 
     //以。。。开始
     public static void test12() {
-        String json = "(user1>>\"张三\");";
+        String json = "(ifuser1>>\"张三\");";
         ExpressionFactory factory = ExpressionFactory.getInstance();
         Expression exp = factory.getExpression(json);
-        exp.setVariableValue("user1", "张三我是好人");
+        exp.setVariableValue("ifuser1", "张三我是好人");
         Valuable result = exp.evaluate();
         System.out.println(result.getBooleanValue());
     }

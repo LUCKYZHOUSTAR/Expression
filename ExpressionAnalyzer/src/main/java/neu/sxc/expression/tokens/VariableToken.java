@@ -1,5 +1,7 @@
 package neu.sxc.expression.tokens;
 
+
+//变量
 public final class VariableToken extends ValueToken {
 	
 	private boolean toBeAssigned;
