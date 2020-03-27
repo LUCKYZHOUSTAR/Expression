@@ -7,6 +7,9 @@ import neu.sxc.expression.tokens.Valuable;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author chaoqiang.zhou
@@ -230,19 +233,40 @@ public class ScriptManagerTest {
 //        System.out.println(scanner.nextLine());
 
 
-        StringBuilder sb = new StringBuilder();
-        sb.append("(city==\"123\"||city==\"234\"|| city==\"all\")");
+//        StringBuilder sb = new StringBuilder();
+//        sb.append("(city==\"123\"||city==\"234\"|| city==\"all\")");
+//
+//        for (int i = 0; i < 1000; i++) {
+//            sb.append("(city==\"123\"||city==\"234\"|| city==\"all\")");
+//
+//        }
+//
+//        long start = System.currentTimeMillis();
+//
+//        long end = System.currentTimeMillis();
+//        System.out.println((end - start) / 1000);
 
-        for (int i = 0; i < 1000; i++) {
-            sb.append("(city==\"123\"||city==\"234\"|| city==\"all\")");
+        //以回车符为换行符
+        Scanner scanner = new Scanner("2342342,43234;,2345,{}345; sadfasdfasdfa sf" +
+                "水电费as" +
+                "水电费啊水电费");
 
+        while (scanner.hasNextLine()) {
+            char[] chars = scanner.nextLine().toCharArray();
+//            System.out.println(scanner.nextLine().toCharArray());
+//            System.out.println(scanner.nextLine().toCharArray());
+//            System.out.println(discardComment(scanner.nextLine()));
+            System.out.println("Sdfasf");
         }
-
-        long start = System.currentTimeMillis();
-
-        long end = System.currentTimeMillis();
-        System.out.println((end - start) / 1000);
+        test345345();
     }
+
+    private static String discardComment(String target) {
+        Pattern commentPattern = Pattern.compile("##.*");
+        Matcher matcher = commentPattern.matcher(target);
+        return matcher.replaceFirst("");
+    }
+
 
     //以。。。开始
     public static void test12() {
@@ -265,6 +289,16 @@ public class ScriptManagerTest {
     }
 
 
+    public static void test345345() {
+        ExpressionFactory factory = ExpressionFactory.getInstance();
+
+        Expression expression = factory.getExpression("1 + max(1,abs(-2)) + abs(-1);");
+
+        Valuable result = expression.evaluate();
+        System.out.println(result.getValue());
+
+    }
+
     /**
      * @Title: test5
      * @Description: 普通审批里面条件
@@ -276,7 +310,9 @@ public class ScriptManagerTest {
         ExpressionFactory factory = ExpressionFactory.getInstance();
         //        String condition = "user1=zhangsasn;user2=lisi;user3=wangwu;user4=liliu;";
         //        String condition = "( 2>1  ||  false)   &&  (false  ||  1<2);";
-        String json = "(a12==\"12\" || a13==\"13\") && (a14==\"14\" || a15==\"15\");";
+//        String json = "(a12==\"12\");";
+        String json = "(a12==\"12\");";
+
         Expression exp = factory.getExpression(json);
         exp.setVariableValue("a12", "12");
         exp.setVariableValue("a13", "");

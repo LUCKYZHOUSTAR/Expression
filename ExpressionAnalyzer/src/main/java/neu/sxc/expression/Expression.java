@@ -142,6 +142,7 @@ public class Expression {
         return finalResult;
     }
 
+
     private void lexicalAnalysis() throws LexicalException {
         LexicalAnalyzer la = new LexicalAnalyzer();
         //TODO:解析表达式符号的过程

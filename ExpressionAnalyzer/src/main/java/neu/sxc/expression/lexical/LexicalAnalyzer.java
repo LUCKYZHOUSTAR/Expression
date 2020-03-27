@@ -86,6 +86,7 @@ public class LexicalAnalyzer {
             curLineCharArray = nextLine().toCharArray();//read a new line
             curLine++;
             nextScanColumn = 0;
+            //找到第一个不是空白的字符
             while (escapeBlank(curLineCharArray) < curLineCharArray.length) {
                 //set current state to the start state, prepare to recognize a new word
                 curMidState = DFA.getDFAStartState();
@@ -304,6 +305,7 @@ public class LexicalAnalyzer {
 
     private String nextLine() {
         //discard comment before return a new line
+        //过滤掉注释
         return discardComment(scanner.nextLine());
     }
 
